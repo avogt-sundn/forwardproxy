@@ -9,6 +9,7 @@ REGISTRY=10.10.3.72:5000
 PORTS= -p 3128:3128
 LINKS= 
 VOLUMES= --volumes-from  data-${NAME}
+VOLUME_LIST= -v /var/spool/squid -v /var/log/squid 
 HTTP_PROXY="http://10.10.1.102:80"
 START_ARGS=-e 'LDAP_DOMAIN=devhub.my' -e "LDAP_PASSWORD=toor"
 
@@ -65,10 +66,13 @@ remove-data:
 
 create: 
 	@echo "Creating volume container"
-	@sudo docker create \
-		-v /var/spool/squid3 \
-		-v /var/log/squid3 \
-		--name data-${NAME} busybox /bin/true
+	@sudo docker create ${VOLUME_LIST} --name data-${NAME} busybox /bin/true
+
+new: remove-data create
+	@echo "NEW data volume"
+	
+tar-data: 	
+	@sudo docker run --rm ${VOLUMES}  busybox find /var/
 
 push: build
 	@echo "Pushing to registry"
