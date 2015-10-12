@@ -18,7 +18,8 @@ ENV SQUID_VERSION=3.3.8 \
 COPY squid.conf /etc/squid/squid.conf
 ENV proxy_pass=
 ENV proxy_user=
-ENV corporate_proxy=10.10.1.102
+ENV parent_proxy=10.10.1.102
+ENV parent_port=80
 
 
 COPY entrypoint.sh /sbin/entrypoint.sh

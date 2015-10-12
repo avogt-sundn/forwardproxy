@@ -3,15 +3,13 @@ VERSION=latest
 
 TAG=devhub/${NAME}:${VERSION}
 
-
 REGISTRY=10.10.3.72:5000
-
 PORTS= -p 3128:3128
 LINKS= 
 VOLUMES= --volumes-from  data-${NAME}
 VOLUME_LIST= -v /var/spool/squid -v /var/log/squid 
 HTTP_PROXY="http://10.10.1.102:80"
-START_ARGS=-e 'LDAP_DOMAIN=devhub.my' -e "LDAP_PASSWORD=toor"
+
 
 all: help
 
@@ -72,7 +70,7 @@ new: remove-data create
 	@echo "NEW data volume"
 	
 tar-data: 	
-	@sudo docker run --rm ${VOLUMES}  busybox find /var/
+	@sudo docker run --rm ${VOLUMES}  busybox find /var/*/squid
 
 push: build
 	@echo "Pushing to registry"
@@ -84,4 +82,9 @@ logs:
 
 save:
 	@echo "exporting image  ${TAG} to file ${NAME}.img"
-	@sudo docker save -o ${NAME}.img  ${TAG} && bzip2 ${NAME}.img 
+	@(mkdir -p /tmp/${NAME} && cp Makefile /tmp/${NAME} && cd /tmp/${NAME} && sudo docker save -o ${NAME}.img  ${TAG} && bzip2 -f ${NAME}.img && cd ..&& tar cvf ${NAME}-${VERSION}.tar  ${NAME} )
+	@mv /tmp/${NAME}-${VERSION}.tar .
+
+load: 
+	@echo "loading image  ${TAG} to docker"
+	bunzip2 ${NAME}.img.bz2 && sudo docker load -i ${NAME}.img && sudo docker images|grep ${NAME}
