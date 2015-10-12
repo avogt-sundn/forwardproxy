@@ -18,7 +18,7 @@ If you want to purge the data collected (cached), remove the data volume contain
 Here are all arguments available 
 
 variable | default | description
------------------------------
+---------|---------|----------
 parent_proxy | 10.10.1.102|the hostname or ip to the proxy that is next (corporate proxy) 
 parent_port  | 80 | the port where the parent proxy listens
 proxy_user   | <empty> | if your parent proxy needs authentication, put the username here
