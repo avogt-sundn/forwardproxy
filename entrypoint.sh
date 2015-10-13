@@ -1,6 +1,7 @@
 #!/bin/sh
 set -e
 
+set |grep SQUID
 find /etc/squid*
 echo $(which squid) 
   

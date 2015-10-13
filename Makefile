@@ -70,7 +70,7 @@ new: remove-data create
 	@echo "NEW data volume"
 	
 tar-data: 	
-	@sudo docker run --rm ${VOLUMES}  busybox find /var/*/squid
+	@sudo docker run --rm ${VOLUMES}  busybox find /var/spool/squid
 
 push: build
 	@echo "Pushing to registry"
