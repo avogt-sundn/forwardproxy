@@ -8,9 +8,9 @@ PORTS= -p 3128:3128
 LINKS= 
 VOLUMES= --volumes-from  data-${NAME}
 VOLUME_LIST= -v /var/spool/squid -v /var/log/squid 
-HTTP_PROXY="http://10.10.1.102:80"
+HTTP_PROXY="http://172.17.42.1:3128"
 
-
+pwd=`pwd`
 all: help
 
 help:
@@ -22,6 +22,7 @@ help:
 	@echo "   3. make stop         - stop ${name}"
 	@echo "   4. make logs         - view logs"
 	@echo "   5. make purge        - stop and remove the container"
+	@echo "   add arguments to the entrypoint.sh with RUN_ARGS=""
 
 build:
 	@echo "building ${TAG}"
@@ -40,9 +41,13 @@ console:	purge
 
 start:	purge
 	@echo "starting container ${TAG} under name ${NAME}"	
-	@sudo docker run -e http_proxy=${HTTP_PROXY} --name ${NAME} ${LINKS} ${PORTS} ${VOLUMES}  ${START_ARGS} -t -d  ${TAG} 
+	@echo docker run -e http_proxy=${HTTP_PROXY} --name ${NAME} ${LINKS} ${PORTS} ${VOLUMES} -t -d ${START_ARGS} ${TAG} ${RUN_ARGS}
+	@sudo docker run -e http_proxy=${HTTP_PROXY} --name ${NAME} ${LINKS} ${PORTS} ${VOLUMES} -t -d ${START_ARGS} ${TAG} ${RUN_ARGS}
 	@echo "Type 'make logs' for the logs"
 
+create-certs:
+	@echo sudo docker run --rm -e http_proxy=${HTTP_PROXY} ${LINKS} ${VOLUMES} -v $(pwd):/out -ti   ${TAG} create-certs
+	@sudo docker run --rm -e http_proxy=${HTTP_PROXY} ${LINKS} ${VOLUMES} -v $(pwd):/out -ti   ${TAG} create-certs
 	
 ps:
 	@sudo docker ps|grep ${NAME}
