@@ -1,4 +1,4 @@
-
+10/14/2015 5:56:14 PM 
 
 # Reverse Proxy #
 --------------
@@ -13,7 +13,41 @@ This image runs a squid serving as a forward proxy. It can be used
  
 ### It's small
 It is based on alpine linux which gives you a super small image size of about 26mb only.
+
+### Why?
  
+1.  This proxy comes as an advantage to those confined behind corporate firewalls that demand credentials. You can enter your credentials when starting the proxy. Then continue using this proxy without credentials.
+
+		notice that all your requests still get logged on the corporate proxy!
+2.  This proxy also can be used especially in virtualized lab environments where the docker host changes. Simply reference the **docker bridge ip** *172.17.42.1* from within your containers/dockerfiles:
+
+	  	RUN set -x && export http_proxy="http://172.17.42.1:3128"  \		 
+ 			 && apk add --update curl gettext acf-squid bash gnutls-utils
+ 
+3.   
+
+## Building with a fixed proxy address
+This proxy is not transparent, you still need to configure each client to use it explicitly. **BUT** its address can be fixed to http://172.17.42.1:3128.
+
+Why? Because this is the default docker bridge ip, and unless you start your docker daemon with *--bip* or other options that change this default ip, you can consider this being never changing between environments. 
+
+### Alpine
+
+	ENV http_proxy="http://172.17.42.1:3128"	
+	RUN apk add --update curl gettext   
+
+or
+	
+	RUN (http_proxy="http://172.17.42.1:3128" apk add --update curl gettext)
+
+### Ubuntu
+
+	ENV http_proxy="http://172.17.42.1:3128"	
+	RUN apt-get update && \
+		apt-get -y install --no-install-recommends software-properties-common python-software-properties
+
+
+
 --------------
 
 ## Starting (with makefile)##
@@ -64,6 +98,29 @@ SSL proxy is *non-transparent*.
 It can proxy SSL/TLS/https urls but only when the client has a https proxy configured! this 
 
 	$ (export https_proxy=http://172.17.42.1:3128 && curl http://www.google.de)
+
+
+## Check what gets cached: squid access.log ##
+
+	$ make exec
+	$ sudo docker exec -ti ..
+
+	$ tail -f /var/log/squid/access.log
+
+## Use as linux package cache?
+
+You can use the proxy as package cache. Just size the persistent cache big enough (full ubuntu takes 100 MB) or trust the cache eviction of Squid.
+
+I tested it for Ubuntu and for Alpine packages.
+
+## Cache settings
+
+Change in the squid.conf and rebuild the docker image.
+Or do it on a running container with docker exec.
+
+## Troubleshooting
+ 
+It is **not** sufficient to set the http_proxy variable on your docker host and then start the docker build! docker build command never accepts any environment variables from the host. (if it does it would make the build become environment-dependent!)
 
 # Transparent proxying #
 
