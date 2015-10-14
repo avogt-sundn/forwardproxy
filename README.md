@@ -118,9 +118,33 @@ I tested it for Ubuntu and for Alpine packages.
 Change in the squid.conf and rebuild the docker image.
 Or do it on a running container with docker exec.
 
+## Setup proxy for downloading base images from Dockerhub
+
+On RHEL6/Ubuntu go to file /etc/default/docker (create it if not existent) and add the line:
+
+	$ vi /etc/default/docker
+	export http_proxy=http://172.17.42.1:3128
+	export https_proxy=http://172.17.42.1:3128
+    export HTTP_PROXY=http://172.17.42.1:3128
+    export HTTPS_PROXY=http://172.17.42.1:3128 
+
+On RHEL7/Centos, remove the *export*
+
+	$ vi /etc/sysconfig/docker
+	http_proxy=http://172.17.42.1:3128
+	https_proxy=http://172.17.42.1:3128
+    HTTP_PROXY=http://172.17.42.1:3128
+    HTTPS_PROXY=http://172.17.42.1:3128 
+
 ## Troubleshooting
+
+#### Does not work, apt-get command hangs
  
 It is **not** sufficient to set the http_proxy variable on your docker host and then start the docker build! docker build command never accepts any environment variables from the host. (if it does it would make the build become environment-dependent!)
+
+#### Downloading base image blocks hangs
+
+You can also not change the way dockerhub registry is accessed when downloading base images: to introduce a proxy, you have to change DOCKER_OPTS on the docker daemon (with redhat/centos/ubuntu -> file /etc/default/docker)
 
 # Transparent proxying #
 
