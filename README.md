@@ -1,9 +1,20 @@
 
-----------
-# Reverse Proxy #
-This image runs a squid serving as a reverse proxy. 
 
-It is based on alpine linux which gives you a super small image size of about 26mb only. 
+# Reverse Proxy #
+--------------
+
+This image runs a squid serving as a forward proxy. It can be used
+
+-  **transparently**: only for http urls! and you need to add the routing.
+-  **non-transparently**: 
+	-  means: your client must be configured to use this proxy.
+		-  in a browser, change the networking settings and enter proxy for http and if you want https
+		-  for linux commands using the *http(s)_proxy* environment variables  
+ 
+### It's small
+It is based on alpine linux which gives you a super small image size of about 26mb only.
+ 
+--------------
 
 ## Starting (with makefile)##
 Start with the right environment variables set to define **the parent proxy**. the parent proxy is usually your corporate proxy. Proxy user and password can be given also:
@@ -47,5 +58,18 @@ Make a test on the docker host line (outside of the docker containers)
 
 Then enter any container and do it again from the inside:
 
-## SSL ? ##
-No, thanks.
+## SSL ##
+SSL proxy is *non-transparent*.
+
+It can proxy SSL/TLS/https urls but only when the client has a https proxy configured! this 
+
+	$ (export https_proxy=http://172.17.42.1:3128 && curl http://www.google.de)
+
+# Transparent proxying #
+
+Read this: 
+
+[http://wiki.squid-cache.org/ConfigExamples/Intercept/SslBumpExplicit](http://wiki.squid-cache.org/ConfigExamples/Intercept/SslBumpExplicit)
+
+# Further reading #
+[http://wiki.alpinelinux.org/wiki/Setting_up_Explicit_Squid_Proxy](http://wiki.alpinelinux.org/wiki/Setting_up_Explicit_Squid_Proxy)
