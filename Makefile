@@ -65,11 +65,11 @@ purge: stop
 	-sudo docker rm ${NAME}  >/dev/null
 
 remove-data:
-	@sudo docker rm data-${NAME}  >/dev/null
+	-sudo docker rm data-${NAME}  >/dev/null
 
 create: 
 	@echo "Creating volume container"
-	@sudo docker create ${VOLUME_LIST} --name data-${NAME} busybox /bin/true
+	@sudo docker create ${VOLUME_LIST} --name data-${NAME} ${TAG} /bin/true
 
 new: remove-data create
 	@echo "NEW data volume"
