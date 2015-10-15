@@ -115,8 +115,11 @@ I tested it for Ubuntu and for Alpine packages.
 
 ## Cache settings
 
-Change in the squid.conf and rebuild the docker image.
-Or do it on a running container with docker exec.
+Most used cache setting is available as ENV variable and can be changed with the *docker run*:
+
+	-e disk_cache_mb=500
+
+Change other parameters in the squid.conf and rebuild the docker image.
 
 ## Setup proxy for downloading base images from Dockerhub
 
@@ -136,6 +139,8 @@ On RHEL7/Centos, remove the *export*
     HTTP_PROXY=http://172.17.42.1:3128
     HTTPS_PROXY=http://172.17.42.1:3128 
 
+Note also that setting the proxy on the docker daemon does not change how the docker container connects to the internet. during build dockerfile commands still need explicit setting of proxy settings as described in this readme.
+
 ## Troubleshooting
 
 #### Does not work, apt-get command hangs
@@ -146,6 +151,10 @@ It is **not** sufficient to set the http_proxy variable on your docker host and 
 
 You can also not change the way dockerhub registry is accessed when downloading base images: to introduce a proxy, you have to change DOCKER_OPTS on the docker daemon (with redhat/centos/ubuntu -> file /etc/default/docker)
 
+#### I set the proxy on the /etc/default/docker but build hangs
+
+Setting the proxy on the daemon only changes how the daemon connects to docker registries (esp. dockerhub). This setting is solely used during the FROM line of the dockerfile. Once the daemon downloaded the base image, it starts the docker build within a container! That container gets networking but does not inherit environment variables since this would make builds become environment-dependent.
+ 
 # Transparent proxying #
 
 Read this: 
