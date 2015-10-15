@@ -1,6 +1,4 @@
-10/14/2015 5:56:14 PM 
-
-# Reverse Proxy #
+# Forward Proxy #
 --------------
 
 This image runs a squid serving as a forward proxy. It can be used
@@ -72,9 +70,9 @@ proxy_pass=  | <empty | .. and your user's password here
 
 ## Starting (with docker run)##
 
-	$ docker create  -v /var/spool/squid -v /var/log/squid  data-reverse-proxy devhub/reverse-proxy /bin/true 
+	$ docker create  -v /var/spool/squid -v /var/log/squid  data-forward-proxy devhub/forward-proxy /bin/true 
 
-    $ docker run -d -p 3128:3128 --name squid  --volumes-from  data-reverse-proxy devhub/reverse-proxy -e parent_proxy=astaro.it.gefa.de -e parent_port=8080 -e proxy_user=GEFA0150 -e proxy_pass=xxxx"
+    $ docker run -d -p 3128:3128 --name squid  --volumes-from  data-forward-proxy devhub/forward-proxy -e parent_proxy=astaro.it.gefa.de -e parent_port=8080 -e proxy_user=GEFA0150 -e proxy_pass=xxxx"
 
 
 ## Starting (with makefile)##
@@ -102,10 +100,8 @@ It can proxy SSL/TLS/https urls but only when the client has a https proxy confi
 
 ## Check what gets cached: squid access.log ##
 
-	$ make exec
-	$ sudo docker exec -ti ..
+	$ sudo docker exec -ti forward-proxy tail -f /var/log/squid/access.log
 
-	$ tail -f /var/log/squid/access.log
 
 ## Use as linux package cache?
 
