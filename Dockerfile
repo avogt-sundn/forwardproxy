@@ -5,7 +5,6 @@ MAINTAINER Armin Vogt avogt@s-und-n.de
 #
 ENV http_proxy="http://172.17.42.1:3128"  
 RUN set -x  \
- && mkdir -p /srv/openldap.d /etc/openldap/sasl2 \
  && apk add --update curl gettext acf-squid
 
 ENV SQUID_VERSION=3.3.8 \
