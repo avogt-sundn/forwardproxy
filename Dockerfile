@@ -3,9 +3,10 @@ MAINTAINER Armin Vogt avogt@s-und-n.de
 
 # http://wiki.alpinelinux.org/wiki/Setting_up_Transparent_Squid_Proxy
 #
-ENV http_proxy="http://172.17.42.1:3128"  
+
+ENV http_proxy="http://forwardproxy.service.consul:3128" https_proxy="http://forwardproxy.service.consul:3128"  
 RUN set -x  \
- && apk add --update curl gettext acf-squid
+ && apk add --update curl gettext acf-squid 
 
 ENV SQUID_VERSION=3.3.8 \
     SQUID_CACHE_DIR=/var/spool/squid \

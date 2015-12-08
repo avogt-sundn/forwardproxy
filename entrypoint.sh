@@ -20,6 +20,12 @@ envsubstitution() {
 	echo "removing login from squid conf since ENV proxy_user is empty"
 	sed -i s/.login=.*//g /etc/squid/squid.conf
   fi
+  if [[ -z "$parent_proxy" ]]; then
+	echo "removing parent squid from squid conf since ENV parent_proxy is empty"
+	sed -i /cache_peer/d 	/etc/squid/squid.conf
+	sed -i /never_direct/d 	/etc/squid/squid.conf
+  fi
+  
   cat /etc/squid/squid.conf | envsubst > tmp_squid.conf && mv tmp_squid.conf /etc/squid/squid.conf 
   echo "Disk cache (-e disk_cache_mb=<mb>) to be used is set to: "$disk_cache_mb" megabytes"
   cat /etc/squid/squid.conf
