@@ -4,7 +4,7 @@ MAINTAINER Armin Vogt avogt@s-und-n.de
 # http://wiki.alpinelinux.org/wiki/Setting_up_Transparent_Squid_Proxy
 #
 
-ENV http_proxy="http://forwardproxy.service.consul:3128" https_proxy="http://forwardproxy.service.consul:3128"  
+#ENV http_proxy="http://forward-proxy.service.consul:3128" https_proxy="http://forward-proxy.service.consul:3128"  
 RUN set -x  \
  && apk add --update curl gettext acf-squid 
 
@@ -17,10 +17,10 @@ ENV SQUID_VERSION=3.3.8 \
 	parent_proxy=10.10.1.102 \
 	https_parent_proxy= \
 	parent_port=80 \
-	disk_cache_mb=500
+	disk_cache_mb=500 \
+	access_log_uri=udp:/sysloghost.service.consul:5000
 
 COPY squid.conf /etc/squid/squid.conf
-
 
 COPY entrypoint.sh /sbin/entrypoint.sh
 RUN chmod 755 /sbin/entrypoint.sh
