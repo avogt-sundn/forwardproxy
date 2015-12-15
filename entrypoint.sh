@@ -4,9 +4,6 @@
 echo "called with arguments:" \"$1\"  \"$2\" \"$3\"
 set -e
 
-
-set |grep SQUID
-find /etc/squid*
 echo "squid bin: $(which squid)"
 
 
@@ -28,11 +25,11 @@ envsubstitution() {
   
   cat /etc/squid/squid.conf | envsubst > tmp_squid.conf && mv tmp_squid.conf /etc/squid/squid.conf 
   echo "Disk cache (-e disk_cache_mb=<mb>) to be used is set to: "$disk_cache_mb" megabytes"
-  cat /etc/squid/squid.conf
 }
 
 create_log_dir() {
   mkdir -p ${SQUID_LOG_DIR}
+  touch ${SQUID_LOG_DIR}/access.log
   chmod -R 755 ${SQUID_LOG_DIR}
   chown -R ${SQUID_USER}:${SQUID_USER} ${SQUID_LOG_DIR}
 }
@@ -53,8 +50,6 @@ if [[ -z ${1} ]]; then
     $(which squid) -N -f /etc/squid/squid.conf -z
   fi
   echo "Starting squid3..."
-  mkdir -p ${SQUID_LOG_DIR}
-  touch ${SQUID_LOG_DIR}/cache.log
   $(which squid) -f /etc/squid/squid.conf -NYCd 1 ${EXTRA_ARGS} &
   exec tail -f ${SQUID_LOG_DIR}/*
   wait
