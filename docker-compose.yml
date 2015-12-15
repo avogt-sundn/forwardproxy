@@ -1,9 +1,11 @@
 forwardproxy:
   image: devhub/forwardproxy:latest
   ports:
-    - "10.121.54.124:3128:3128" 
+    - "3128:3128" 
   environment:
     - access_log_uri="udp:/sysloghost.service.consul:5000"
-
   volumes:
     - /tmp/forward-proxy:/var/spool/squid
+  restart: always
+  tty: false
+ 

@@ -53,7 +53,11 @@ if [[ -z ${1} ]]; then
     $(which squid) -N -f /etc/squid/squid.conf -z
   fi
   echo "Starting squid3..."
-  exec $(which squid) -f /etc/squid/squid.conf -NYCd 1 ${EXTRA_ARGS}
+  mkdir -p ${SQUID_LOG_DIR}
+  touch ${SQUID_LOG_DIR}/cache.log
+  $(which squid) -f /etc/squid/squid.conf -NYCd 1 ${EXTRA_ARGS} &
+  exec tail -f ${SQUID_LOG_DIR}/*
+  wait
 else
   exec "$@"
 fi
