@@ -5,14 +5,15 @@ VERSION=$(shell cat VERSION)
 GIT=$(shell git  log --oneline|head -n 1|awk '{print $$1;}')
 RELEASE=${TAG}:${VERSION}-${GIT}
 
-info:	
-	@echo "      TAG : ${TAG}"
-	@echo "  VERSION : ${VERSION}"
-	@echo "      GIT : ${GIT}"
 	
 build: Dockerfile
 	@docker build --tag=${TAG} .
 	
+info:	
+	@echo "      TAG : ${TAG}"
+	@echo "  VERSION : ${VERSION}"
+	@echo "      GIT : ${GIT}"
+
 release: build 	
 	docker tag -f ${TAG}:latest ${RELEASE}
 	@echo "Released:  ${RELEASE}"
