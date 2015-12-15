@@ -6,7 +6,7 @@ MAINTAINER Armin Vogt avogt@s-und-n.de
 
 #ENV http_proxy="http://forward-proxy.service.consul:3128" https_proxy="http://forward-proxy.service.consul:3128"  
 RUN set -x  \
- && apk add --update curl gettext acf-squid 
+ && apk add --update curl gettext acf-squid bash
 
 ENV SQUID_VERSION=3.3.8 \
     SQUID_CACHE_DIR=/var/spool/squid \
