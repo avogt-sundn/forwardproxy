@@ -1,7 +1,7 @@
 forwardproxy:
   image: devhub/forwardproxy:latest
   ports:
-    - "3128:3128" 
+    - "10.121.54.124:3128:3128" 
   environment:
     - access_log_uri="udp:/sysloghost.service.consul:5000"
 

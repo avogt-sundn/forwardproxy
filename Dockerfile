@@ -18,11 +18,11 @@ ENV SQUID_VERSION=3.3.8 \
 	https_parent_proxy= \
 	parent_port=80 \
 	disk_cache_mb=500 \
-	access_log_uri=udp:/sysloghost.service.consul:5000
+	access_log_uri=/var/log/squid/access.log
 
-COPY squid.conf /etc/squid/squid.conf
+ADD /assets/squid.conf /etc/squid/squid.conf
 
-COPY entrypoint.sh /sbin/entrypoint.sh
+ADD entrypoint.sh /sbin/entrypoint.sh
 RUN chmod 755 /sbin/entrypoint.sh
 
 EXPOSE 3128
