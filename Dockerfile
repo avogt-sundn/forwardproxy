@@ -25,6 +25,9 @@ ADD /assets/squid.conf /etc/squid/squid.conf
 ADD entrypoint.sh /sbin/entrypoint.sh
 RUN chmod 755 /sbin/entrypoint.sh
 
+ENV http_proxy="" \
+    https_proxy=""
+
 EXPOSE 3128
 ENTRYPOINT ["/sbin/entrypoint.sh"]
 
