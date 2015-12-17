@@ -22,7 +22,7 @@ run:
 	docker-compose up -d
 	
 stop: 
-	docker-compose stop &
+	docker-compose stop 
 
 rm: stop
 	docker-compose rm ${NAME}	
