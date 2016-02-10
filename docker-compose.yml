@@ -3,7 +3,11 @@ forwardproxy:
   ports:
     - "3128:3128" 
   volumes:
-    - /tmp/forward-proxy:/var/spool/squid
+    - /docker/repository/forward-proxy:/var/spool/squid
   restart: always
   tty: false
- 
+  environment:
+    parent_proxy: astaro.it.gefa.de 
+    parent_port: 8080 
+    proxy_user: GEFA0154 
+    proxy_pass: 
