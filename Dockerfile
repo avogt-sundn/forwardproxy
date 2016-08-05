@@ -1,4 +1,4 @@
-FROM alpine:3.2
+FROM gefa-docker.it.gefa.de/devhub/alpine:3.2
 MAINTAINER Armin Vogt avogt@s-und-n.de
 
 # http://wiki.alpinelinux.org/wiki/Setting_up_Transparent_Squid_Proxy
@@ -6,7 +6,8 @@ MAINTAINER Armin Vogt avogt@s-und-n.de
 
 
 RUN export http_proxy="http://172.17.42.1:3128" https_proxy="http://172.17.42.1:3128" && set -x  \
- && apk add --update curl gettext acf-squid bash
+ && apk add --update curl gettext acf-squid &&\
+  rm -rf /etc/ssl /usr/share/man /tmp/* /var/cache/apk/* /var/lib/apk/* /etc/apk/cache/* 
 
 ENV SQUID_VERSION=3.3.8 \
     SQUID_CACHE_DIR=/var/spool/squid \
