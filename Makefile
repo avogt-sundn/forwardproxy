@@ -28,4 +28,4 @@ rm: stop
 	docker-compose rm ${NAME}	
 	
 exec:
-	docker exec -ti ${NAME}_${NAME}_1 /bin/bash 	
+	docker exec -ti ${NAME}_${NAME}_1 /bin/ash 	
