@@ -1,16 +1,26 @@
-forwardproxy:
-#  image: devhub/forwardproxy:latest
-  image: gefa-docker.it.gefa.de/devhub/forwardproxy:1.0-a
-  ports:
-    - "3128:3128" 
-  dns:
-    - "10.200.64.131"
-  volumes:
-    - /docker/repository/forward-proxy:/var/spool/squid
-  restart: always
-  tty: false
-  environment:
-    parent_proxy: astaro.it.gefa.de 
-    parent_port: 8080 
-#    proxy_user: GEFA0154 
-#    proxy_pass: 8PsPAest
+version: "2"
+services:
+  forwardproxy:
+  #  image: devhub/forwardproxy:latest
+    image: devhub/forwardproxy:1.0-a
+    build:
+       context: .
+       args:
+            - http_proxy
+
+    ports:
+      - "3128:3128"
+    dns:
+      - "10.10.3.1"
+    volumes:
+      - forwardproxy-data:/var/spool/squid
+    restart: always
+    tty: false
+    environment:
+      parent_proxy: wwwproxy
+      parent_port: 80
+  #    proxy_user: user154
+  #    proxy_pass: xyzsecret
+
+volumes:
+  forwardproxy-data:
